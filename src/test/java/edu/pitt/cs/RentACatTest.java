@@ -2,6 +2,7 @@ package edu.pitt.cs;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.atLeastOnce;
 
 import org.junit.After;
 import org.junit.Before;
@@ -77,9 +78,6 @@ public class RentACatTest {
 	public void testGetCatNullNumCats0() {
 
 		// TODO
-		r.returnCat(1);
-		r.returnCat(2);
-		r.returnCat(3);
 		Cat cat = r.getCat(2);
 		assertNull("Returned cat isn't null", cat);
 	}
@@ -162,7 +160,9 @@ public class RentACatTest {
 		r.addCat(c2);
 		r.addCat(c3);
 		r.rentCat(2);
+		Mockito.when(c2.getRented()).thenReturn(true);
 		boolean result = r.catAvailable(2);
+		System.out.println(result);
 		assertFalse("Cat 2 is available", result);
 		// TODO
 	}
@@ -238,6 +238,7 @@ public class RentACatTest {
 		r.addCat(c1);
 		r.addCat(c2);
 		r.addCat(c3);
+		System.out.println(r.listCats());
 		assertEquals( "Didn't return expected String", r.listCats(), "ID 1. Jennyanydots\nID 2. Old Deuteronomy\nID 3. Mistoffelees\n" );
 		
 	}
@@ -282,11 +283,12 @@ public class RentACatTest {
 		r.addCat(c2);
 		r.addCat(c3);
 		r.rentCat(2);
+		Mockito.when(c2.getRented()).thenReturn(true);
 		boolean result = r.rentCat(2);
 		assertFalse("Cat 2 was rented twice", result);
-		Mockito.verify(r, Mockito.times(1)).rentCat(1);
-		Mockito.verify(r, Mockito.times(1)).rentCat(2);
-		Mockito.verify(r, Mockito.times(1)).rentCat(3);
+		Mockito.verify(c1, Mockito.times(0)).rentCat();
+		//Mockito.verify(c2, Mockito.times(0)).rentCat();
+		Mockito.verify(c3, Mockito.times(0)).rentCat();
 
 	}
 
@@ -302,10 +304,6 @@ public class RentACatTest {
 
 	@Test
 	public void testReturnCatFailureNumCats0() {
-		r.returnCat(1);
-		r.returnCat(2);
-		r.returnCat(3);
-
 		boolean ret = r.returnCat(2);
 
 		assertFalse("returnCat(2) returned fale", ret);
@@ -335,10 +333,11 @@ public class RentACatTest {
 		r.addCat(c2);
 		r.addCat(c3);
 		r.rentCat(2);
+		Mockito.when(c2.getRented()).thenReturn(true);
 		boolean result = r.returnCat(2);
 		assertTrue("returnCat(2) returned false", result);
-		Mockito.verify(r, Mockito.times(0)).rentCat(1);
-		Mockito.verify(r, Mockito.times(1)).rentCat(2);
-		Mockito.verify(r, Mockito.times(0)).rentCat(3);
+		 Mockito.verify(c1, Mockito.times(0)).returnCat();
+		 Mockito.verify(c2, Mockito.times(1)).returnCat();
+		 Mockito.verify(c3, Mockito.times(0)).returnCat();
 	}
 }

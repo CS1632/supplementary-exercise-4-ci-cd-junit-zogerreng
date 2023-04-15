@@ -20,15 +20,12 @@ public class RentACatImpl implements RentACat {
 	public boolean returnCat(int id) {
 
 		for(Cat c : cats){
-			if(c.getId() == id) return false;
+			if(c.getId() == id){
+			getCat(id).returnCat();
+			 return true;
+			}
 		}
-
-		getCat(id).returnCat();
-
-		for(Cat c : cats){
-			if(c.getId() == id) return true;
-		}
-
+		
 		return false;
 	}
 
@@ -69,7 +66,7 @@ public class RentACatImpl implements RentACat {
 		String toReturn = "";
 		for(Cat c : cats){
 			if(!c.getRented()){
-				toReturn += c.toString() + "\n";
+				toReturn +="ID "+ c.getId()+". "+ c.getName() + "\n";
 			}
 		}
 		return toReturn;
